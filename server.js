@@ -27,8 +27,8 @@ app.post('/pay', async (req, res) => {
     db.updateBalance(userData.id, payment.sum);
     bot.sendPaymentInfo(userData.id)
     if (userData.referral != '') {
-      db.updateEarned(userData.referral, payment.sum/4);
-      db.updateBalance(userData.referral, payment.sum/4);
+      db.updateEarned(userData.referral, payment.sum*0.4);
+      db.updateBalance(userData.referral, payment.sum*0.4);
     }
   }
   res.status(200).send('YES');
