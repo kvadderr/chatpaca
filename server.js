@@ -29,7 +29,6 @@ app.post('/pay', async (req, res) => {
   res.status(200).send('YES');
 });
 
-// Слушаем порт
 app.listen(port, () => {
   console.log(`Сервер запущен на порту ${port}`);
 });

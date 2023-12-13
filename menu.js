@@ -31,6 +31,7 @@ async function getPaymentMenu(userID) {
   const paymentLink = await helpers.generateOrder(userID);
   const buyGeneration = Markup.inlineKeyboard([
     Markup.button.url("💸 Внести средства", paymentLink.result),
+    Markup.button.callback("🖥 Главное меню", "goBack"),
   ])
   return buyGeneration
 }

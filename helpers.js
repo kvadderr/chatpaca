@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const uuid = uuidv4();
 const axios = require('axios')
 const welcome = "✋ Приветствую, "
-const welcome_2 = ". \nНаш сервис предоставляет сервис по генерации AI изображений"
+const welcome_2 = ". \nНаш сервис предоставляет сервис по генерации AI изображений. Загрузите ваше селфи."
 
 const huge = "💰 Заработай 40% от продаж!"
 const profile = "👤 Профиль: "
@@ -59,13 +59,12 @@ async function getProfileInfo(name, id) {
 }
 
 function getPhotoInfo() {
-  return "ЗДЕСЬ ТЕКСТ ДЛЯ ТОГО ЧТОБЫ ОБЪЯСНИТЬ ЧТО НАДО ЗАГРУЗИТЬ ФОТКУ ЧЕРЕЗ ЗАКРЕП  https://teletype.in/@kvadder/xLdh-pgetYi"
+  return "Загрузите ваше сэлфи или изображение, после загрузки выберете пол персонажей."
 }
 
 function getUnlockWait() {
   return "Ожидайте пару секунд"
 }
-
 
 async function getReferralInfo(userID) {
   const profileInfo = await db.getUser(userID)
