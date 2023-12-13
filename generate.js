@@ -2,6 +2,7 @@ const fs = require('fs');
 const url = 'http://62.68.146.39:4000/gen/faceSwap';
 const axios = require('axios')
 const sharp = require('sharp');
+const db = require('./db');
 
 function readFileAsBase64(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
@@ -14,6 +15,22 @@ async function getImageBase64(inputPathArray) {
   try {
     for (const inputPath of inputPathArray) {
       const imageBuffer = await sharp(inputPath).blur(10).toBuffer();
+      const base64Data = imageBuffer.toString('base64');
+      data.push(base64Data);
+    }
+    return data;
+  } catch (error) {
+    console.error('Ошибка при обработке изображения:', error.message);
+    throw error;
+  }
+}
+
+
+async function getImageBase64WithoutBlur(inputPathArray) {
+  const data = [];
+  try {
+    for (const inputPath of inputPathArray) {
+      const imageBuffer = await sharp(inputPath.path).blur(0.3).toBuffer();
       const base64Data = imageBuffer.toString('base64');
       data.push(base64Data);
     }
@@ -102,5 +119,7 @@ async function generateImage(isMale, userPhotoPath) {
 module.exports = {
   generateImage,
   saveImageLocally,
-  getImageBase64
+  getImageBase64,
+  readFileAsBase64,
+  getImageBase64WithoutBlur
 }

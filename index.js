@@ -39,6 +39,9 @@ bot.action("man", async ctx => {
   const fileLink = ctx.session.fileLink;
   const data = await generate.generateImage(true, fileLink)
   const savedImage = await generate.saveImageLocally(data);
+
+  db.savePhoto(ctx.chat.id, savedImage[0], savedImage[2], savedImage[2])
+
   const bluredImage = await generate.getImageBase64(savedImage);
   const media = []
   for (let i = 0; i < bluredImage.length; i++) {
@@ -57,6 +60,7 @@ bot.action("girl", async ctx => {
   const fileLink = ctx.session.fileLink;
   const data = await generate.generateImage(false, fileLink)
   const savedImage = await generate.saveImageLocally(data);
+  db.savePhoto(ctx.chat.id, savedImage[0], savedImage[2], savedImage[2])
   const bluredImage = await generate.getImageBase64(savedImage);
   const media = []
   for (let i = 0; i < bluredImage.length; i++) {
@@ -66,12 +70,25 @@ bot.action("girl", async ctx => {
     media.push(mediaData)
   }
   await ctx.replyWithMediaGroup(media)
-  await ctx.reply(menu.unlock)
+  await ctx.reply("✅ Фото успешно сгенерировано!", menu.unlock)
 })
 
 bot.on(message('text'), async (ctx) => {
   const welcome = await helpers.getWelcome(ctx.chat.username)
   ctx.reply(welcome, menu.mainMenu)
+})
+
+bot.action("unlock", async ctx => {
+  await ctx.answerCbQuery();
+  const photoPath = await db.getPhotoPath(ctx.chat.id)
+  const media = []
+  for (let i = 0; i < 3; i++) {
+    let mediaData = {
+      media: process.env.BACKEND_URL + photoPath[i].path.substring(2) , type: 'photo'
+    }
+    media.push(mediaData)
+  }
+  await ctx.replyWithMediaGroup(media)
 })
 
 bot.action("profile", async ctx => {

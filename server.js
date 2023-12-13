@@ -1,14 +1,15 @@
 const express = require('express');
+
+const dotent = require('dotenv')
+const path = require('path');
 const bot = require('./index')
 const app = express();
-const port = 4000;
+
+dotent.config()
+const port = process.env.PORT;
 
 bot
-// Определение маршрута
-app.get('/', (req, res) => {
-  res.send('Привет, мир!');
-});
-
+app.use('/generating', express.static(path.join(__dirname, 'generating')));
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Что-то пошло не так!');
