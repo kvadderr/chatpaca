@@ -31,6 +31,11 @@ const unlock = Markup.inlineKeyboard([
   Markup.button.callback("Разблокировать (-200₽) ", "unlock"),
 ])
 
+const unlockAfterPay = Markup.inlineKeyboard([
+  Markup.button.callback("Разблокировать (-200₽) ", "unlock"),
+  Markup.button.callback("Главное меню ", "goBack"),
+], { wrap: (btn, index, currentRow) => currentRow.length >= (index + 1) / 2, })
+
 async function getPaymentMenu(userID) {
   const paymentLink = await helpers.generateOrder(userID);
   const buyGeneration = Markup.inlineKeyboard([
@@ -48,5 +53,6 @@ module.exports = {
   gender,
   unlock,
   backMenu,
-  getPaymentMenu
+  unlockAfterPay,
+  getPaymentMenu,
 }

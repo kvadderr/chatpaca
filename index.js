@@ -15,7 +15,7 @@ bot.use(LocalSession.middleware());
 db.createDB();
 
 async function sendPaymentInfo(userID) {
-  await bot.telegram.sendMessage(userID, `Ваш баланс пополнен`)
+  await bot.telegram.sendMessage(userID, `✅ Ваш баланс пополнен ✅`)
 } 
 
 bot.start(async (ctx) => {
@@ -57,7 +57,7 @@ bot.action("man", async ctx => {
     await ctx.replyWithMediaGroup(media)
     await ctx.reply("✅ Фото успешно сгенерировано!", menu.unlock)
   } catch (error) {
-    await ctx.reply("🛑 Произошла ошибка! Повторите запрос")
+    await ctx.reply("🛑 Произошла ошибка! Повторите запрос". menu.unlockAfterPay)
   }
 
 })
