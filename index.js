@@ -97,11 +97,11 @@ bot.action("unlock", async ctx => {
     await ctx.answerCbQuery();
     const user = await db.getUser(ctx.chat.id);
 
-    if (user.balance < 200) {
+    if (user.balance < 199) {
       const payMenu = await menu.getPaymentMenu(ctx.chat.id);
       ctx.editMessageText("У вас недостаточно средств. Зачисление средств произойдет в течении нескольких минут после оплаты. Проверка баланса осуществляется в профиле. После пополнения повторите процедуру генерации.", payMenu)
     } else {
-      db.updateBalance(ctx.chat.id, -200);
+      db.updateBalance(ctx.chat.id, -199);
       const photoPath = await db.getPhotoPath(ctx.chat.id)
       const media = Array.from({ length: 3 }, (_, i) => ({
         media: { source: photoPath[i].path },

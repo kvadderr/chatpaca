@@ -28,11 +28,11 @@ const gender = Markup.inlineKeyboard([
 ])
 
 const unlock = Markup.inlineKeyboard([
-  Markup.button.callback("Разблокировать (-200₽) ", "unlock"),
+  Markup.button.callback("Разблокировать (-199) ", "unlock"),
 ])
 
 const unlockAfterPay = Markup.inlineKeyboard([
-  Markup.button.callback("Разблокировать (-200₽) ", "unlock"),
+  Markup.button.callback("Разблокировать (-199) ", "unlock"),
   Markup.button.callback("Главное меню ", "goBack"),
 ], { wrap: (btn, index, currentRow) => currentRow.length >= (index + 1) / 2, })
 

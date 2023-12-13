@@ -102,7 +102,7 @@ function toDataUrl(url, callback) {
 async function generateImage(isMale, userPhotoPath) {
   let baseImage1, baseImage2, baseImage3;
   let randomManPics_man = getRandomManPics();
-  
+  console.log(randomManPics_man)
   if (isMale) {
     baseImage1 = randomManPics_man[0];
     baseImage2 = randomManPics_man[1];
