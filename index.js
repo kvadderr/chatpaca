@@ -136,6 +136,8 @@ bot.action("referral", async ctx => {
 
 
 bot.action("buy", async ctx => {
+  const unlockWait = helpers.getUnlockWait();
+  ctx.editMessageText(unlockWait)
   const payMenu = await menu.getPaymentMenu(ctx.chat.id);
   ctx.editMessageText("Для пополнения средств перейдите в платежную систему", payMenu)
 })
