@@ -18,7 +18,8 @@ function getWelcome(name) {
 }
 
 async function generateOrder(userID) {
-  innerID = uuid;
+  const uniqueID = Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+  innerID = uniqueID;
   project = process.env.PROJECT_ID;
   sum = process.env.SUM;
   currency = process.env.CURRENCY;

@@ -23,6 +23,7 @@ app.post('/pay', async (req, res) => {
   if (payment?.action === "order_payed") {
     const orderData = await db.getOrder(payment.innerID);
     const userData = await db.getUser(orderData.userID);
+    console.log(userData);
     db.updateBalance(userData.id, payment.sum);
     if (userData.referral != '') db.updateBalance(userData.referral, payment.sum/4);
   }
