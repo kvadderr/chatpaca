@@ -34,43 +34,50 @@ bot.on(message('photo'), async (ctx) => {
 })
 
 bot.action("man", async ctx => {
-  const photoQueue = helpers.getPhotoQueue();
-  ctx.editMessageText(photoQueue);
-  const fileLink = ctx.session.fileLink;
-  const data = await generate.generateImage(true, fileLink)
-  const savedImage = await generate.saveImageLocally(data);
-
-  db.savePhoto(ctx.chat.id, savedImage[0], savedImage[2], savedImage[2])
-
-  const bluredImage = await generate.getImageBase64(savedImage);
-  const media = []
-  for (let i = 0; i < bluredImage.length; i++) {
-    let mediaData = {
-      media: { source: Buffer.from(bluredImage[i], 'base64') }, type: 'photo'
+  try {
+    const photoQueue = helpers.getPhotoQueue();
+    ctx.editMessageText(photoQueue);
+    const fileLink = ctx.session.fileLink;
+    const data = await generate.generateImage(true, fileLink)
+    const savedImage = await generate.saveImageLocally(data);
+    db.savePhoto(ctx.chat.id, savedImage[0], savedImage[1], savedImage[2])
+    const bluredImage = await generate.getImageBase64(savedImage);
+    const media = []
+    for (let i = 0; i < bluredImage.length; i++) {
+      let mediaData = {
+        media: { source: Buffer.from(bluredImage[i], 'base64') }, type: 'photo'
+      }
+      media.push(mediaData)
     }
-    media.push(mediaData)
+    await ctx.replyWithMediaGroup(media)
+    await ctx.reply("✅ Фото успешно сгенерировано!", menu.unlock)
+  } catch (error) {
+    await ctx.reply("🛑 Произошла ошибка! Повторите запрос")
   }
-  await ctx.replyWithMediaGroup(media)
-  await ctx.reply("✅ Фото успешно сгенерировано!", menu.unlock)
+
 })
 
 bot.action("girl", async ctx => {
-  const photoQueue = helpers.getPhotoQueue();
-  ctx.editMessageText(photoQueue);
-  const fileLink = ctx.session.fileLink;
-  const data = await generate.generateImage(false, fileLink)
-  const savedImage = await generate.saveImageLocally(data);
-  db.savePhoto(ctx.chat.id, savedImage[0], savedImage[2], savedImage[2])
-  const bluredImage = await generate.getImageBase64(savedImage);
-  const media = []
-  for (let i = 0; i < bluredImage.length; i++) {
-    let mediaData = {
-      media: { source: Buffer.from(bluredImage[i], 'base64') }, type: 'photo'
+  try {
+    const photoQueue = helpers.getPhotoQueue();
+    ctx.editMessageText(photoQueue);
+    const fileLink = ctx.session.fileLink;
+    const data = await generate.generateImage(false, fileLink)
+    const savedImage = await generate.saveImageLocally(data);
+    db.savePhoto(ctx.chat.id, savedImage[0], savedImage[1], savedImage[2])
+    const bluredImage = await generate.getImageBase64(savedImage);
+    const media = []
+    for (let i = 0; i < bluredImage.length; i++) {
+      let mediaData = {
+        media: { source: Buffer.from(bluredImage[i], 'base64') }, type: 'photo'
+      }
+      media.push(mediaData)
     }
-    media.push(mediaData)
+    await ctx.replyWithMediaGroup(media)
+    await ctx.reply("✅ Фото успешно сгенерировано!", menu.unlock)
+  } catch (error) {
+    await ctx.reply("🛑 Произошла ошибка! Повторите запрос")
   }
-  await ctx.replyWithMediaGroup(media)
-  await ctx.reply("✅ Фото успешно сгенерировано!", menu.unlock)
 })
 
 bot.on(message('text'), async (ctx) => {
@@ -79,16 +86,27 @@ bot.on(message('text'), async (ctx) => {
 })
 
 bot.action("unlock", async ctx => {
-  await ctx.answerCbQuery();
-  const photoPath = await db.getPhotoPath(ctx.chat.id)
-  const media = []
-  for (let i = 0; i < 3; i++) {
-    let mediaData = {
-      media: process.env.BACKEND_URL + photoPath[i].path.substring(2) , type: 'photo'
+  try {
+    const unlockWait = helpers.getUnlockWait();
+    ctx.editMessageText(unlockWait);
+    await ctx.answerCbQuery();
+    const user = await db.getUser(ctx.chat.id);
+
+    if (user.balance < 200) {
+      const payMenu = await menu.getPaymentMenu(ctx.chat.id);
+      ctx.editMessageText("У вас недостаточно средств. Зачисление средств произойдет в течении нескольких минут после оплаты.", payMenu)
+    } else {
+      db.updateBalance(ctx.chat.id, -200);
+      const photoPath = await db.getPhotoPath(ctx.chat.id)
+      const media = Array.from({ length: 3 }, (_, i) => ({
+        media: { source: photoPath[i].path },
+        type: 'photo'
+      }));
+      await ctx.replyWithMediaGroup(media)
     }
-    media.push(mediaData)
+  } catch (error) {
+    await ctx.reply("🛑 Произошла ошибка! Повторите запрос")
   }
-  await ctx.replyWithMediaGroup(media)
 })
 
 bot.action("profile", async ctx => {
@@ -113,6 +131,12 @@ bot.action("referral", async ctx => {
   await ctx.answerCbQuery();
   const referralInfo = await helpers.getReferralInfo(ctx.chat.id);
   await ctx.editMessageText(referralInfo, menu.referralMenu)
+})
+
+
+bot.action("buy", async ctx => {
+  const payMenu = await menu.getPaymentMenu(ctx.chat.id);
+  ctx.reply("Для пополнения средств перейдите в платежную систему", payMenu)
 })
 
 

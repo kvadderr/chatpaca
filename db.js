@@ -5,7 +5,27 @@ function createDB() {
   db.serialize(() => {
     db.run("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, referral INTEGER, balance INTEGER, earned INTEGER)");
     db.run("CREATE TABLE IF NOT EXISTS photos (id INTEGER PRIMARY KEY, userID INTEGER, path STRING)");
-    db.run("CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY, userID INTEGER, path STRING)");
+    db.run("CREATE TABLE IF NOT EXISTS orders (id INTEGER PRIMARY KEY, userID INTEGER, orderID STRING)");
+  });
+}
+
+function createOrder(orderID, userID) {
+  db.serialize(() => {
+    const stmt = db.prepare("INSERT INTO orders (userID, orderID) VALUES (?, ?)");
+    stmt.run(userID, orderID);
+    stmt.finalize();
+  });
+}
+
+function getOrder(orderID) {
+  return new Promise((resolve, reject) => {
+    db.get('SELECT * FROM orders WHERE orderID = ?', orderID, (err, row) => {
+      if (err) {
+        console.error(err.message);
+        return reject(err)
+      }
+      return resolve(row)
+    });
   });
 }
 
@@ -37,6 +57,7 @@ function getUser(id) {
   });
 }
 
+
 function getReferralCount(id) {
   return new Promise((resolve, reject) => {
     db.get('SELECT COUNT(referral) AS referralCount FROM users WHERE referral = ? ', id, (err, row) => {
@@ -49,15 +70,14 @@ function getReferralCount(id) {
   });
 }
 
-function populateBalance(userID) {
-  return new Promise((resolve, reject) => {
-    db.get('SELECT COUNT(referral) AS referralCount FROM users WHERE referral = ? ', id, (err, row) => {
-      if (err) {
-        console.error(err.message);
-        return reject(err);
-      }
-      return resolve(row)
-    });
+function updateBalance(userId, amount) {
+  const query = `UPDATE users SET balance = balance + ? WHERE id = ?`;
+  db.run(query, [amount, userId], function (err) {
+    if (err) {
+      console.error('Error updating balance:', err.message);
+    } else {
+      console.log(`Balance updated successfully. Rows affected: ${this.changes}`);
+    }
   });
 }
 
@@ -91,5 +111,8 @@ module.exports = {
   getUser,
   getReferralCount,
   savePhoto,
-  getPhotoPath
+  getPhotoPath,
+  updateBalance,
+  createOrder,
+  getOrder
 }
