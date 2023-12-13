@@ -125,7 +125,7 @@ bot.action("goBack", async ctx => {
 bot.action("sendPhoto", async ctx => {
   await ctx.answerCbQuery();
   const photoInfo = await helpers.getPhotoInfo();
-  await ctx.editMessageText(photoInfo, menu.goBack)
+  await ctx.editMessageText(photoInfo, menu.backMenu)
 })
 
 bot.action("referral", async ctx => {

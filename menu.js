@@ -18,6 +18,10 @@ const referralMenu = Markup.inlineKeyboard([
   Markup.button.callback("⬅️ Назад", "goBack"),
 ])
 
+const backMenu = Markup.inlineKeyboard([
+  Markup.button.callback("⬅️ Назад", "goBack"),
+])
+
 const gender = Markup.inlineKeyboard([
   Markup.button.callback("👨 Мужчина ", "man"),
   Markup.button.callback("👩‍🦰 Женщина", "girl"),
@@ -43,5 +47,6 @@ module.exports = {
   referralMenu,
   gender,
   unlock,
+  backMenu,
   getPaymentMenu
 }
