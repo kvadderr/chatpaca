@@ -15,7 +15,7 @@ bot.use(LocalSession.middleware());
 db.createDB();
 
 async function sendPaymentInfo(userID) {
-  await bot.telegram.sendMessage(userID, `Hello`)
+  await bot.telegram.sendMessage(userID, `Ваш баланс пополнен`)
 } 
 
 bot.start(async (ctx) => {
