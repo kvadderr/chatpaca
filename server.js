@@ -25,7 +25,10 @@ app.post('/pay', async (req, res) => {
     const userData = await db.getUser(orderData.userID);
     console.log(userData);
     db.updateBalance(userData.id, payment.sum);
-    if (userData.referral != '') db.updateBalance(userData.referral, payment.sum/4);
+    if (userData.referral != '') {
+      db.updateEarned(userData.referral, payment.sum/4);
+      db.updateBalance(userData.referral, payment.sum/4);
+    }
   }
   res.status(200).send('YES');
 });

@@ -81,6 +81,17 @@ function updateBalance(userId, amount) {
   });
 }
 
+function updateEarned(userId, amount) {
+  const query = `UPDATE users SET earned = earned + ? WHERE id = ?`;
+  db.run(query, [amount, userId], function (err) {
+    if (err) {
+      console.error('Error updating balance:', err.message);
+    } else {
+      console.log(`Balance updated successfully. Rows affected: ${this.changes}`);
+    }
+  });
+}
+
 function savePhoto(userID, path1, path2, path3) {
   db.serialize(() => {
     const stmt = db.prepare("INSERT INTO photos (userID, path) VALUES (?, ?)");
@@ -114,5 +125,6 @@ module.exports = {
   getPhotoPath,
   updateBalance,
   createOrder,
-  getOrder
+  getOrder,
+  updateEarned
 }
