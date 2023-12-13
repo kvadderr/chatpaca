@@ -4,6 +4,32 @@ const axios = require('axios')
 const sharp = require('sharp');
 const db = require('./db');
 
+let manPics = [
+  './assets/man_1.jpeg',
+  './assets/man_2.jpeg',
+  './assets/man_3.jpeg',
+  './assets/man_4.jpeg',
+  './assets/man_5.jpeg',
+  './assets/man_6.jpeg',
+  './assets/man_7.jpeg',
+  './assets/man_8.jpeg',
+  './assets/man_9.jpeg',
+  './assets/man_10.jpeg',
+  './assets/man_11.jpeg',
+  './assets/man_12.jpeg',
+  './assets/man_13.jpeg',
+  './assets/man_14.jpeg'
+];
+function getRandomManPics() {
+  if (manPics.length < 3) {
+    return manPics;
+  }
+  manPics = manPics.sort(() => Math.random() - 0.5);
+  let randomManPics = manPics.slice(0, 3);
+  manPics = manPics.slice(3);
+  return randomManPics;
+}
+
 function readFileAsBase64(filePath) {
   const fileBuffer = fs.readFileSync(filePath);
   const base64String = fileBuffer.toString('base64');
@@ -75,11 +101,12 @@ function toDataUrl(url, callback) {
 
 async function generateImage(isMale, userPhotoPath) {
   let baseImage1, baseImage2, baseImage3;
-
+  let randomManPics_man = getRandomManPics();
+  
   if (isMale) {
-    baseImage1 = './assets/man_1.jpeg';
-    baseImage2 = './assets/man_2.jpeg';
-    baseImage3 = './assets/man_3.jpeg';
+    baseImage1 = randomManPics_man[0];
+    baseImage2 = randomManPics_man[1];
+    baseImage3 = randomManPics_man[2];
   } else {
     baseImage1 = './assets/girl_1.jpeg';
     baseImage2 = './assets/girl_2.jpeg';
