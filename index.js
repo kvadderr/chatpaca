@@ -14,6 +14,10 @@ bot.use(LocalSession.middleware());
 
 db.createDB();
 
+async function sendPaymentInfo(userID) {
+  await bot.telegram.sendMessage(userID, `Hello`)
+} 
+
 bot.start(async (ctx) => {
   const welcome = await helpers.getWelcome(ctx.chat.username)
   const user = {
@@ -144,3 +148,7 @@ bot.action("buy", async ctx => {
 
 
 bot.launch()
+
+module.exports = {
+  sendPaymentInfo
+}

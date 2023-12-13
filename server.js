@@ -25,6 +25,7 @@ app.post('/pay', async (req, res) => {
     const userData = await db.getUser(orderData.userID);
     console.log(userData);
     db.updateBalance(userData.id, payment.sum);
+    bot.sendPaymentInfo(userData.id)
     if (userData.referral != '') {
       db.updateEarned(userData.referral, payment.sum/4);
       db.updateBalance(userData.referral, payment.sum/4);
@@ -32,6 +33,7 @@ app.post('/pay', async (req, res) => {
   }
   res.status(200).send('YES');
 });
+
 
 app.listen(port, () => {
   console.log(`Сервер запущен на порту ${port}`);
