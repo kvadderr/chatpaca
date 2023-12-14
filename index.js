@@ -25,8 +25,8 @@ bot.start(async (ctx) => {
       id: ctx.chat.id,
       referral: ctx.startPayload,
     }
-    await db.createUser(user);
-    ctx.reply(welcome, menu.mainMenu)
+    db.createUser(user);
+    await ctx.reply(welcome, menu.mainMenu)
   } catch {
 
   }
@@ -45,8 +45,8 @@ bot.action("man", async ctx => {
 
   
   try {
-const photoQueue = helpers.getPhotoQueue();
-  ctx.editMessageText(photoQueue);
+    const photoQueue = helpers.getPhotoQueue();
+    await ctx.editMessageText(photoQueue);
     const fileLink = ctx.session.fileLink;
     const data = await generate.generateImage(true, fileLink)
     const savedImage = await generate.saveImageLocally(data);
@@ -71,7 +71,7 @@ const photoQueue = helpers.getPhotoQueue();
 bot.action("girl", async ctx => {
   try {
     const photoQueue = helpers.getPhotoQueue();
-    ctx.editMessageText(photoQueue);
+    await ctx.editMessageText(photoQueue);
     const fileLink = ctx.session.fileLink;
     const data = await generate.generateImage(false, fileLink)
     const savedImage = await generate.saveImageLocally(data);
@@ -93,19 +93,19 @@ bot.action("girl", async ctx => {
 
 bot.on(message('text'), async (ctx) => {
   const welcome = await helpers.getWelcome(ctx.chat.username)
-  ctx.reply(welcome, menu.mainMenu)
+  await ctx.reply(welcome, menu.mainMenu)
 })
 
 bot.action("unlock", async ctx => {
   try {
     const unlockWait = helpers.getUnlockWait();
-    ctx.editMessageText(unlockWait);
+    await ctx.editMessageText(unlockWait);
     await ctx.answerCbQuery();
     const user = await db.getUser(ctx.chat.id);
 
     if (user.balance < 199) {
       const payMenu = await menu.getPaymentMenu(ctx.chat.id);
-      ctx.editMessageText("У вас недостаточно средств. Зачисление средств произойдет в течении нескольких минут после оплаты. Проверка баланса осуществляется в профиле. После пополнения повторите процедуру генерации.", payMenu)
+      await ctx.editMessageText("У вас недостаточно средств. Зачисление средств произойдет в течении нескольких минут после оплаты. Проверка баланса осуществляется в профиле. После пополнения повторите процедуру генерации.", payMenu)
     } else {
       db.updateBalance(ctx.chat.id, -199);
       const photoPath = await db.getPhotoPath(ctx.chat.id)
@@ -147,9 +147,9 @@ bot.action("referral", async ctx => {
 
 bot.action("buy", async ctx => {
   const unlockWait = helpers.getUnlockWait();
-  ctx.editMessageText(unlockWait)
+  await ctx.editMessageText(unlockWait)
   const payMenu = await menu.getPaymentMenu(ctx.chat.id);
-  ctx.editMessageText("Для пополнения средств перейдите в платежную систему", payMenu)
+  await ctx.editMessageText("Для пополнения средств перейдите в платежную систему", payMenu)
 })
 
 
