@@ -43,9 +43,10 @@ bot.on(message('photo'), async (ctx) => {
 
 bot.action("man", async ctx => {
 
-  const photoQueue = helpers.getPhotoQueue();
-  ctx.editMessageText(photoQueue);
+  
   try {
+const photoQueue = helpers.getPhotoQueue();
+  ctx.editMessageText(photoQueue);
     const fileLink = ctx.session.fileLink;
     const data = await generate.generateImage(true, fileLink)
     const savedImage = await generate.saveImageLocally(data);
