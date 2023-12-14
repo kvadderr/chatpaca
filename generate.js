@@ -20,13 +20,20 @@ let manPics = [
   './assets/man_13.jpeg',
   './assets/man_14.jpeg'
 ];
+
 async function getRandomManPics() {
   if (manPics.length < 3) {
     return manPics;
   }
-  manPics = manPics.sort(() => Math.random() - 0.5);
-  let randomManPics = manPics.slice(0, 3);
-  manPics = manPics.slice(3);
+  const shuffledManPics = [...manPics];
+  for (let i = shuffledManPics.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledManPics[i], shuffledManPics[j]] = [shuffledManPics[j], shuffledManPics[i]];
+  }
+
+  // Получаем первые три изображения
+  const randomManPics = shuffledManPics.slice(0, 3);
+
   return randomManPics;
 }
 
