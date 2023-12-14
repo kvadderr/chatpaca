@@ -13,10 +13,6 @@ bot
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/generating', express.static(path.join(__dirname, 'generating')));
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Что-то пошло не так!');
-});
 
 app.post('/pay', async (req, res) => {
   const payment = req.body;
@@ -33,7 +29,13 @@ app.post('/pay', async (req, res) => {
   res.status(200).send('YES');
 });
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Что-то пошло не так!');
+});
+
 
 app.listen(port, () => {
   console.log(`Сервер запущен на порту ${port}`);
 });
+
