@@ -16,16 +16,20 @@ db.createDB();
 
 async function sendPaymentInfo(userID) {
   await bot.telegram.sendMessage(userID, `✅ Ваш баланс пополнен ✅`, menu.unlockAfterPay)
-} 
+}
 
 bot.start(async (ctx) => {
-  const welcome = await helpers.getWelcome(ctx.chat.username)
-  const user = {
-    id: ctx.chat.id,
-    referral: ctx.startPayload,
+  try {
+    const welcome = await helpers.getWelcome(ctx.chat.username)
+    const user = {
+      id: ctx.chat.id,
+      referral: ctx.startPayload,
+    }
+    await db.createUser(user);
+    ctx.reply(welcome, menu.mainMenu)
+  } catch {
+
   }
-  await db.createUser(user);
-  ctx.reply(welcome, menu.mainMenu)
 })
 
 bot.on(message('photo'), async (ctx) => {
