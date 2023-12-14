@@ -33,12 +33,13 @@ bot.start(async (ctx) => {
 })
 
 bot.on(message('photo'), async (ctx) => {
+  try {
   const photo = ctx.message.photo;
   const photoSize = photo[photo.length - 1];
   const fileId = photoSize.file_id;
   const fileLinks = await ctx.telegram.getFileLink(fileId);
   ctx.session.fileLink = fileLinks;
-  await ctx.reply(helpers.getGender(), menu.gender);
+  await ctx.reply(helpers.getGender(), menu.gender); } catch { }
 })
 
 bot.action("man", async ctx => {
@@ -92,8 +93,9 @@ bot.action("girl", async ctx => {
 })
 
 bot.on(message('text'), async (ctx) => {
+  try {
   const welcome = await helpers.getWelcome(ctx.chat.username)
-  await ctx.reply(welcome, menu.mainMenu)
+  await ctx.reply(welcome, menu.mainMenu) } catch { } 
 })
 
 bot.action("unlock", async ctx => {
@@ -121,35 +123,38 @@ bot.action("unlock", async ctx => {
 })
 
 bot.action("profile", async ctx => {
+try {
   await ctx.answerCbQuery();
   const profileInfo = await helpers.getProfileInfo("@" + ctx.chat.username, ctx.chat.id)
-  await ctx.editMessageText(profileInfo, menu.goBack)
+  await ctx.editMessageText(profileInfo, menu.goBack) } catch { } 
 })
 
 bot.action("goBack", async ctx => {
+try {
   await ctx.answerCbQuery();
   const welcome = await helpers.getWelcome(ctx.chat.username)
-  await ctx.editMessageText(welcome, menu.mainMenu)
+  await ctx.editMessageText(welcome, menu.mainMenu) } catch { } 
 })
 
 bot.action("sendPhoto", async ctx => {
+  try {
   await ctx.answerCbQuery();
   const photoInfo = await helpers.getPhotoInfo();
-  await ctx.editMessageText(photoInfo, menu.backMenu)
+  await ctx.editMessageText(photoInfo, menu.backMenu) } catch { } 
 })
 
 bot.action("referral", async ctx => {
+  try {
   await ctx.answerCbQuery();
   const referralInfo = await helpers.getReferralInfo(ctx.chat.id);
-  await ctx.editMessageText(referralInfo, menu.referralMenu)
+  await ctx.editMessageText(referralInfo, menu.referralMenu) } catch { }
 })
 
 
 bot.action("buy", async ctx => {
-  const unlockWait = helpers.getUnlockWait();
-  await ctx.editMessageText(unlockWait)
+  try {
   const payMenu = await menu.getPaymentMenu(ctx.chat.id);
-  await ctx.editMessageText("Для пополнения средств перейдите в платежную систему", payMenu)
+  await ctx.editMessageText("Для пополнения средств перейдите в платежную систему", payMenu) } catch {}
 })
 
 
