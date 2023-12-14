@@ -45,19 +45,20 @@ bot.action("man", async ctx => {
 
   const photoQueue = helpers.getPhotoQueue();
   ctx.editMessageText(photoQueue);
-  const fileLink = ctx.session.fileLink;
-  const data = await generate.generateImage(true, fileLink)
-  const savedImage = await generate.saveImageLocally(data);
-  db.savePhoto(ctx.chat.id, savedImage[0], savedImage[1], savedImage[2])
-  const bluredImage = await generate.getImageBase64(savedImage);
-  const media = []
-  for (let i = 0; i < bluredImage.length; i++) {
-    let mediaData = {
-      media: { source: Buffer.from(bluredImage[i], 'base64') }, type: 'photo'
-    }
-    media.push(mediaData)
-  }
   try {
+    const fileLink = ctx.session.fileLink;
+    const data = await generate.generateImage(true, fileLink)
+    const savedImage = await generate.saveImageLocally(data);
+    db.savePhoto(ctx.chat.id, savedImage[0], savedImage[1], savedImage[2])
+    const bluredImage = await generate.getImageBase64(savedImage);
+    const media = []
+    for (let i = 0; i < bluredImage.length; i++) {
+      let mediaData = {
+        media: { source: Buffer.from(bluredImage[i], 'base64') }, type: 'photo'
+      }
+      media.push(mediaData)
+    }
+
     await ctx.replyWithMediaGroup(media)
     await ctx.reply("✅ Фото успешно сгенерировано!", menu.unlock)
   } catch (error) {

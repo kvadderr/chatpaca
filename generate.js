@@ -20,7 +20,7 @@ let manPics = [
   './assets/man_13.jpeg',
   './assets/man_14.jpeg'
 ];
-function getRandomManPics() {
+async function getRandomManPics() {
   if (manPics.length < 3) {
     return manPics;
   }
@@ -101,7 +101,7 @@ function toDataUrl(url, callback) {
 
 async function generateImage(isMale, userPhotoPath) {
   let baseImage1, baseImage2, baseImage3;
-  let randomManPics_man = getRandomManPics();
+  let randomManPics_man = await getRandomManPics();
   console.log(randomManPics_man)
   if (isMale) {
     baseImage1 = randomManPics_man[0];
